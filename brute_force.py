@@ -12,7 +12,7 @@ def brute_force(sequence_text, sequence_list_patterns, dictionary):
         for sequence_pattern in sequence_list_patterns:
             pattern_length = len(sequence_pattern)
             # check if they're the same pattern or if it's already went over the pattern length
-            if index + pattern_length < text_length:
+            if index + pattern_length <= text_length:
                 if (
                     sequence_text.seq[index : (index + pattern_length)]
                     == sequence_pattern

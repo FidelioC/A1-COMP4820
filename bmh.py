@@ -68,7 +68,7 @@ def boyer_moore_horspool(
             index = dict_indices[sequence_pattern]
             pattern_length = len(sequence_pattern)
             # check if they're the same pattern or if it's already went over the pattern length
-            if index + pattern_length < text_length:
+            if index + pattern_length <= text_length:
                 if (
                     sequence_text.seq[index : (index + pattern_length)]
                     == sequence_pattern

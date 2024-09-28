@@ -8,7 +8,7 @@ from Bio.SeqRecord import SeqRecord
 
 # ========= main ========== #
 def read_fasta_file():
-    seq_record = SeqIO.read("Sorangium_cellulosum.fasta", "fasta")
+    seq_record = SeqIO.read("Sorangium_cellulosum_19lines.fasta", "fasta")
 
     return seq_record
 
