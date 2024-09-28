@@ -8,7 +8,7 @@ from Bio.SeqRecord import SeqRecord
 
 # ========= main ========== #
 def read_fasta_file():
-    seq_record = SeqIO.read("Sorangium_cellulosum_19lines.fasta", "fasta")
+    seq_record = SeqIO.read("Sorangium_cellulosum.fasta", "fasta")
 
     return seq_record
 
@@ -45,7 +45,15 @@ def commands_processing(pattern, algorithm):
     # algorithms
     if algorithm == "bmh":
         print("BMH: ")
-        all_tables = bmh.build_all_shift_tables(sequence_text, sequence_list_patterns)
+        all_tables = bmh.build_all_shift_tables_text(
+            sequence_text, sequence_list_patterns
+        )
+        dictionary = bmh.boyer_moore_horspool(
+            sequence_text, sequence_list_patterns, dictionary, all_tables
+        )
+    elif algorithm == "bmh-pattern-alphabet":
+        print("BMH Pattern Alphabet: ")
+        all_tables = bmh.build_all_shift_tables_pattern(sequence_list_patterns)
         dictionary = bmh.boyer_moore_horspool(
             sequence_text, sequence_list_patterns, dictionary, all_tables
         )
@@ -61,3 +69,4 @@ def commands_processing(pattern, algorithm):
 
 if __name__ == "__main__":
     commands_processing()
+    # print(bmh.build_all_shift_tables_pattern(("aurora", "test")))

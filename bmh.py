@@ -2,9 +2,10 @@ from Bio import SeqIO
 
 
 # ========= BMH ========== #
-def shift_table_text(sequence_text, pattern):
-    """create shift table for text (genome) pre-processing"""
-    set_text = set(sequence_text)
+def shift_table(sequence, pattern):
+    """create shift table for text (genome) or pattern pre-processing
+    depending on the input"""
+    set_text = set(sequence)
     pattern_length = len(pattern)
     shift_table = {}
     index = pattern_length - 2  # ignore the last char
@@ -27,17 +28,24 @@ def shift_table_text(sequence_text, pattern):
     return shift_table
 
 
-def shift_table_pattern(sequence_pattern):
-    """create shift table for pattern pre-processing"""
-
-
-def build_all_shift_tables(sequence_text, sequence_list_patterns):
-    """create all shift tables for each pattern"""
+def build_all_shift_tables_text(sequence_text, sequence_list_patterns):
+    """create all shift tables for each pattern for text processing"""
     all_shift_tables = {}
     for pattern in sequence_list_patterns:
         # ignore duplicate pattern
         if pattern not in all_shift_tables:
-            all_shift_tables[pattern] = shift_table_text(sequence_text, pattern)
+            all_shift_tables[pattern] = shift_table(sequence_text, pattern)
+
+    return all_shift_tables
+
+
+def build_all_shift_tables_pattern(sequence_list_patterns):
+    """create all shift tables for each pattern for pattern processing"""
+    all_shift_tables = {}
+    for pattern in sequence_list_patterns:
+        # ignore duplicate pattern
+        if pattern not in all_shift_tables:
+            all_shift_tables[pattern] = shift_table(pattern, pattern)
 
     return all_shift_tables
 
@@ -69,9 +77,18 @@ def boyer_moore_horspool(
                     dictionary[sequence_pattern].append(index)
 
                 # shift the current pattern index according to the last compared char from the text
-                dict_indices[sequence_pattern] += all_shift_tables[sequence_pattern][
-                    sequence_text.seq[(index + pattern_length - 1)]
-                ]
+                next_char_shift = sequence_text.seq[(index + pattern_length - 1)]
+
+                # conditional check if symbol in T is in the shift table or no
+                if next_char_shift in all_shift_tables[sequence_pattern]:
+                    # shift according to table
+                    dict_indices[sequence_pattern] += all_shift_tables[
+                        sequence_pattern
+                    ][next_char_shift]
+                else:
+                    # decide what value to shift, here I used len(pattern) for shifting
+                    dict_indices[sequence_pattern] += pattern_length
+
             else:
                 sequence_list_patterns.remove(sequence_pattern)
 
