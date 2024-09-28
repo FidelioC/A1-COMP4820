@@ -1,6 +1,3 @@
-from Bio import SeqIO
-
-
 # ========= BMH ========== #
 def shift_table(sequence, pattern):
     """create shift table for text (genome) or pattern pre-processing

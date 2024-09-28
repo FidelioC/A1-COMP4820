@@ -2,15 +2,14 @@ from Bio import SeqIO
 import click
 import bmh
 import brute_force
+import aho_corasick
 from Bio.Seq import Seq
 from Bio.SeqRecord import SeqRecord
 
 
 # ========= main ========== #
 def read_fasta_file():
-    seq_record = SeqIO.read("Sorangium_cellulosum_19lines.fasta", "fasta")
-
-    return seq_record
+    return SeqIO.read("Sorangium_cellulosum_19lines.fasta", "fasta")
 
 
 def initialize_output_dictionary(sequence_list_patterns):
@@ -68,5 +67,8 @@ def commands_processing(pattern, algorithm):
 
 
 if __name__ == "__main__":
-    commands_processing()
+    # commands_processing()
     # print(bmh.build_all_shift_tables_pattern(("aurora", "test")))
+
+    patterns = ["aa", "baa", "bcca", "cb"]
+    aho_corasick.Trie(patterns)

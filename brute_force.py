@@ -1,6 +1,3 @@
-from Bio import SeqIO
-
-
 # ========= BRUTE FORCE ========== #
 def brute_force(sequence_text, sequence_list_patterns, dictionary):
     index = 0
