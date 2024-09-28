@@ -71,4 +71,5 @@ if __name__ == "__main__":
     # print(bmh.build_all_shift_tables_pattern(("aurora", "test")))
 
     patterns = ["aa", "baa", "bcca", "cb"]
-    aho_corasick.Trie(patterns)
+    aho_trie = aho_corasick.Trie(patterns)
+    # aho_trie.build_fail_arcs()
