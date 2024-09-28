@@ -46,7 +46,6 @@ def boyer_moore_horspool(
     sequence_text, sequence_list_patterns, dictionary, all_shift_tables
 ):
     dict_indices = {}  # dictionary to safe the current index for each pattern
-    done_count = 0  # used to see if all sequence patterns have reached the end
     index = 0  # start at index 0
     text_length = len(sequence_text)
 
