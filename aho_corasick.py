@@ -26,7 +26,7 @@ class Trie:
                 # go to the next child node
                 curr_node = curr_node.goto[char]
             # finished creating nodes for one pattern, this is the output node
-            curr_node.output.append(char)
+            curr_node.output.append(pattern)
 
     def build_fail_arcs(self):
         """build fail arcs"""
@@ -58,5 +58,32 @@ class Trie:
                     # so, i will add a self-reference to the root
                     goto_child.fail = self.root
 
-    def aho_corasick():
-        """set pattern matching using aho corasick"""
+                # This is indicating an output function and output arcs
+                if goto_child.fail.output:
+                    goto_child.output.extend(goto_child.fail.output)
+
+
+def aho_corasick(sequence_text, trie: Trie, dictionary):
+    """set pattern matching using aho corasick"""
+    curr_node = trie.root  # start from the root
+    index = 0
+    for char in sequence_text:
+        # if node doesn't exist in the children nodes, traverse the fail arcs
+        while char not in curr_node.goto and curr_node != trie.root:
+            curr_node = curr_node.fail
+
+        # go to the next matching node if exist
+        if char in curr_node.goto:
+            curr_node = curr_node.goto[char]
+        else:
+            # this is the edge case handling, where the root will just consume the character
+            curr_node = trie.root
+
+        if curr_node.output:
+            for pattern in curr_node.output:
+                dictionary[pattern].append(index)
+
+            # print(f"curr_node.output: {curr_node.output} pos: {index}")
+
+        index += 1
+    return dictionary

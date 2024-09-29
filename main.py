@@ -32,16 +32,7 @@ def print_output(dictionary):
         )
 
 
-@click.command()
-@click.option("--pattern", multiple=True)
-@click.option("--algorithm")
-def commands_processing(pattern, algorithm):
-    # init
-    sequence_text = read_fasta_file()
-    sequence_list_patterns = list(pattern)
-    dictionary = initialize_output_dictionary(sequence_list_patterns)
-
-    # algorithms
+def choose_algorithm(algorithm, sequence_text, sequence_list_patterns, dictionary):
     if algorithm == "bmh":
         print("BMH: ")
         all_tables = bmh.build_all_shift_tables_text(
@@ -56,20 +47,36 @@ def commands_processing(pattern, algorithm):
         dictionary = bmh.boyer_moore_horspool(
             sequence_text, sequence_list_patterns, dictionary, all_tables
         )
+    elif algorithm == "aho-corasick":
+        print("AHO corasick: ")
+        aho_trie = aho_corasick.Trie(sequence_list_patterns)
+        aho_corasick.aho_corasick(sequence_text, aho_trie, dictionary)
     else:
         print("BRUTE FORCE: ")
         dictionary = brute_force.brute_force(
             sequence_text, sequence_list_patterns, dictionary
         )
 
+    return dictionary
+
+
+@click.command()
+@click.option("--pattern", multiple=True)
+@click.option("--algorithm")
+def commands_processing(pattern, algorithm):
+    # init
+    sequence_text = read_fasta_file()
+    sequence_list_patterns = list(pattern)
+    dictionary = initialize_output_dictionary(sequence_list_patterns)
+
+    # algorithms
+    dictionary = choose_algorithm(
+        algorithm, sequence_text, sequence_list_patterns, dictionary
+    )
+
     # output
     print_output(dictionary)
 
 
 if __name__ == "__main__":
-    # commands_processing()
-    # print(bmh.build_all_shift_tables_pattern(("aurora", "test")))
-
-    patterns = ["aa", "baa", "bcca", "cb"]
-    aho_trie = aho_corasick.Trie(patterns)
-    # aho_trie.build_fail_arcs()
+    commands_processing()
