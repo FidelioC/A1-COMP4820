@@ -8,8 +8,8 @@ from Bio.SeqRecord import SeqRecord
 
 
 # ========= main ========== #
-def read_fasta_file():
-    return SeqIO.read("Sorangium_cellulosum_19lines.fasta", "fasta")
+def read_fasta_file(file):
+    return SeqIO.read(file, "fasta")
 
 
 def initialize_output_dictionary(sequence_list_patterns):
@@ -24,12 +24,18 @@ def initialize_output_dictionary(sequence_list_patterns):
     return dictionary
 
 
-def print_output(dictionary):
-    # print(dictionary)
-    for item in dictionary:
-        print(
-            f"Pattern: {item} \n\tCount: {len(dictionary[item])} \n\tLocations: {dictionary[item]}"
-        )
+def print_output(output, dictionary):
+    if output == "locations":
+        for item in dictionary:
+            print(f"Pattern: {item} \n\tLocations: {dictionary[item]}")
+    elif output == "count":
+        for item in dictionary:
+            print(f"Pattern: {item} \n\tCount: {len(dictionary[item])}")
+    elif output == "both":
+        for item in dictionary:
+            print(
+                f"Pattern: {item} \n\tCount: {len(dictionary[item])} \n\tLocations: {dictionary[item]}"
+            )
 
 
 def choose_algorithm(algorithm, sequence_text, sequence_list_patterns, dictionary):
@@ -51,7 +57,7 @@ def choose_algorithm(algorithm, sequence_text, sequence_list_patterns, dictionar
         print("AHO corasick: ")
         aho_trie = aho_corasick.Trie(sequence_list_patterns)
         aho_corasick.aho_corasick(sequence_text, aho_trie, dictionary)
-    else:
+    elif algorithm == "brute-force":
         print("BRUTE FORCE: ")
         dictionary = brute_force.brute_force(
             sequence_text, sequence_list_patterns, dictionary
@@ -61,11 +67,13 @@ def choose_algorithm(algorithm, sequence_text, sequence_list_patterns, dictionar
 
 
 @click.command()
-@click.option("--pattern", multiple=True)
-@click.option("--algorithm")
-def commands_processing(pattern, algorithm):
+@click.option("--pattern", multiple=True, required=True)
+@click.option("--algorithm", default="brute-force")
+@click.option("--output", default="count")
+@click.option("--file", default="file", required=True)
+def commands_processing(pattern, algorithm, output, file):
     # init
-    sequence_text = read_fasta_file()
+    sequence_text = read_fasta_file(file)
     sequence_list_patterns = list(pattern)
     dictionary = initialize_output_dictionary(sequence_list_patterns)
 
@@ -75,7 +83,7 @@ def commands_processing(pattern, algorithm):
     )
 
     # output
-    print_output(dictionary)
+    print_output(output, dictionary)
 
 
 if __name__ == "__main__":
