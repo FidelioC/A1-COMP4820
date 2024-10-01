@@ -28,14 +28,14 @@ def print_output(output, dictionary):
     if output == "locations":
         for item in dictionary:
             print(f"Pattern: {item} \n\tLocations: {dictionary[item]}")
-    elif output == "count":
-        for item in dictionary:
-            print(f"Pattern: {item} \n\tCount: {len(dictionary[item])}")
     elif output == "both":
         for item in dictionary:
             print(
                 f"Pattern: {item} \n\tCount: {len(dictionary[item])} \n\tLocations: {dictionary[item]}"
             )
+    else:
+        for item in dictionary:
+            print(f"Pattern: {item} \n\tCount: {len(dictionary[item])}")
 
 
 def choose_algorithm(algorithm, sequence_text, sequence_list_patterns, dictionary):
@@ -57,7 +57,7 @@ def choose_algorithm(algorithm, sequence_text, sequence_list_patterns, dictionar
         print("AHO corasick: ")
         aho_trie = aho_corasick.Trie(sequence_list_patterns)
         aho_corasick.aho_corasick(sequence_text, aho_trie, dictionary)
-    elif algorithm == "brute-force":
+    else:
         print("BRUTE FORCE: ")
         dictionary = brute_force.brute_force(
             sequence_text, sequence_list_patterns, dictionary
